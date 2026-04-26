@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Borneo-Tech | Electrical • Network • Security</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/phosphor-icons/1.4.2/phosphor.min.js"></script>
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy2: #112233;
+    --blue: #1a3a5c;
+    --accent: #00c9a7;
+    --accent2: #4fc3f7;
+    --green: #39d98a;
+    --white: #f0f4f8;
+    --gray: #8899aa;
+    --card: rgba(255,255,255,0.04);
+    --border: rgba(0,201,167,0.2);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* GLOW BLOBS */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.12;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .blob-1 { width: 400px; height: 400px; background: #00c9a7; top: -100px; right: -100px; }
+  .blob-2 { width: 300px; height: 300px; background: #1a6faa; bottom: 200px; left: -80px; }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(13,27,42,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    height: 44px;
+    width: auto;
+    filter:
+      drop-shadow(0 0 8px rgba(0, 201, 167, 0.45))
+      drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
+    transition: filter 0.3s;
+  }
+  .nav-logo img:hover {
+    filter:
+      drop-shadow(0 0 14px rgba(0, 201, 167, 0.7))
+      drop-shadow(0 2px 8px rgba(0, 0, 0, 0.8));
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 100px 24px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,201,167,0.1);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero-sub {
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 24px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .hero p {
+    max-width: 520px;
+    color: var(--gray);
+    line-height: 1.8;
+    font-size: 1rem;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #00a88a);
+    color: #0d1b2a;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(0,201,167,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,201,167,0.4);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-outline:hover {
+    border-color: var(--accent);
+    background: rgba(0,201,167,0.05);
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--gray);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: fadeIn 1s 1s ease both;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollDown 2s infinite;
+  }
+
+  /* SECTION */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 80px 24px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+
+  .section-desc {
+    color: var(--gray);
+    line-height: 1.8;
+    max-width: 600px;
+    margin-bottom: 48px;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .service-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .service-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(0,201,167,0.4);
+    box-shadow: 0 12px 40px rgba(0,201,167,0.08);
+  }
+  .service-card:hover::before { opacity: 1; }
+
+  .service-icon {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 16px;
+    display: block;
+    color: var(--accent);
+  }
+  .service-icon svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .service-card h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+
+  .service-card p {
+    color: var(--gray);
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  /* PORTFOLIO */
+  .portfolio-grid {
+    display: grid;
+    gap: 20px;
+  }
+
+  .portfolio-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .portfolio-card:hover {
+    border-color: rgba(0,201,167,0.4);
+    transform: translateX(4px);
+  }
+
+  .portfolio-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: rgba(0,201,167,0.2);
+    line-height: 1;
+    min-width: 48px;
+  }
+
+  .portfolio-info h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .portfolio-info p {
+    color: var(--gray);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin-bottom: 12px;
+  }
+
+  .tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    background: rgba(0,201,167,0.08);
+    border: 1px solid rgba(0,201,167,0.2);
+    color: var(--accent);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* SKILLS */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+  }
+
+  .skill-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+
+  .skill-item:hover {
+    border-color: rgba(0,201,167,0.4);
+    transform: translateY(-3px);
+  }
+
+  .skill-emoji { width: 36px; height: 36px; margin: 0 auto 10px; display: block; color: var(--accent); }
+  .skill-emoji svg { width: 100%; height: 100%; }
+
+  .skill-item span:last-child {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--gray);
+    letter-spacing: 0.5px;
+  }
+
+  /* CONTACT */
+  .contact-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .contact-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+
+  .contact-box h3 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+
+  .contact-box p {
+    color: var(--gray);
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+
+  .contact-links {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--white);
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .contact-link:hover {
+    border-color: var(--accent);
+    background: rgba(0,201,167,0.08);
+    color: var(--accent);
+  }
+
+  /* DIVIDER */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 auto;
+    max-width: 900px;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 32px 24px;
+    color: var(--gray);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    position: relative;
+    z-index: 1;
+  }
+
+  footer span { color: var(--accent); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  @keyframes scrollDown {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* FADE IN ON SCROLL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    nav { padding: 14px 16px; }
+    .nav-links { display: none; }
+    section { padding: 60px 16px; }
+    .portfolio-card { flex-direction: column; gap: 8px; }
+    .contact-box { padding: 32px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="images/logo.png" alt="Borneo-Tech">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#layanan">Layanan</a></li>
+    <li><a href="#portofolio">Portofolio</a></li>
+    <li><a href="#keahlian">Keahlian</a></li>
+    <li><a href="#kontak">Kontak</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 256 256" style="display:inline-block;vertical-align:middle;margin-right:4px"><path fill="currentColor" d="M128 16a96 96 0 1 0 96 96A96.11 96.11 0 0 0 128 16Zm0 56a40 40 0 1 1-40 40a40 40 0 0 1 40-40Zm0 160a95.61 95.61 0 0 1-64-24.54V208a16 16 0 0 1 16-16h96a16 16 0 0 1 16 16v-0.54A95.61 95.61 0 0 1 128 232Z"/></svg>
+    Bengkayang, Kalimantan Barat
+  </div>
+  <h1>BORNEO<span>-TECH</span></h1>
+  <p class="hero-sub">Electrical • Network • Security</p>
+  <p>Solusi teknologi terpadu untuk instansi, bisnis, dan komunitas di Kalimantan Barat. Dari instalasi listrik hingga sistem digital berbasis cloud.</p>
+  <div class="hero-btns">
+    <a href="#portofolio" class="btn-primary">Lihat Portofolio</a>
+    <a href="#kontak" class="btn-outline">Hubungi Kami</a>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</div>
+
+<!-- LAYANAN -->
+<div class="divider"></div>
+<section id="layanan">
+  <div class="reveal">
+    <p class="section-label">● Apa yang kami kerjakan</p>
+    <h2 class="section-title">Layanan Kami</h2>
+    <p class="section-desc">Kami mengerjakan kebutuhan teknis dari hulu ke hilir — dari kabel hingga sistem digital yang berjalan di cloud.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-icon">
+        <!-- Lightning bolt / listrik -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M213.85 125.46L99.85 213.46A8 8 0 0 1 88 206V142H40a8 8 0 0 1-6.15-13.14l114-88a8 8 0 0 1 12.29 9.25L140.89 126H208a8 8 0 0 1 4.96 14.14Z"/></svg>
+      </span>
+      <h3>Instalasi Listrik</h3>
+      <p>Pemasangan instalasi listrik rumah dan gedung, desain denah kelistrikan, dan troubleshooting sistem listrik.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">
+        <!-- Globe / jaringan -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm87.63 96H168.5a131.67 131.67 0 0 0-23.38-71.48A88.22 88.22 0 0 1 215.63 120ZM96 128a116.58 116.58 0 0 0 4.34 32H155.66A116.58 116.58 0 0 0 160 128a116.58 116.58 0 0 0-4.34-32H100.34A116.58 116.58 0 0 0 96 128Zm32-95.54c12.34 10.33 22.64 33.84 27.36 63.54h-54.72C105.36 66.3 115.66 42.79 128 32.46ZM110.88 48.52A131.67 131.67 0 0 0 87.5 120H40.37a88.22 88.22 0 0 1 70.51-71.48ZM40.37 136H87.5a131.67 131.67 0 0 0 23.38 71.48A88.22 88.22 0 0 1 40.37 136ZM128 223.54c-12.34-10.33-22.64-33.84-27.36-63.54h54.72c-4.72 29.7-15.02 53.21-27.36 63.54Zm17.12-15.06A131.67 131.67 0 0 0 168.5 136h47.13a88.22 88.22 0 0 1-70.51 71.48Z"/></svg>
+      </span>
+      <h3>Jaringan & Internet</h3>
+      <p>Setting router, konfigurasi Mikrotik, instalasi kabel LAN, dan setup jaringan kantor atau rumahan.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">
+        <!-- Camera / CCTV -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M208 56H180.28L166.65 35.56A8 8 0 0 0 160 32H96a8 8 0 0 0-6.65 3.56L75.72 56H48A24 24 0 0 0 24 80V192a24 24 0 0 0 24 24H208a24 24 0 0 0 24-24V80A24 24 0 0 0 208 56Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V80a8 8 0 0 1 8-8H80a8 8 0 0 0 6.65-3.56L100.28 48h55.44l13.63 20.44A8 8 0 0 0 176 72h32a8 8 0 0 1 8 8ZM128 88a44 44 0 1 0 44 44A44.05 44.05 0 0 0 128 88Zm0 72a28 28 0 1 1 28-28A28 28 0 0 1 128 160Z"/></svg>
+      </span>
+      <h3>CCTV & Keamanan</h3>
+      <p>Instalasi kamera CCTV, konfigurasi NVR/DVR, akses remote monitoring, dan sistem keamanan terintegrasi.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">
+        <!-- Monitor / sistem digital -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M208 24H48A24 24 0 0 0 24 48V160a24 24 0 0 0 24 24H96v16H80a8 8 0 0 0 0 16h96a8 8 0 0 0 0-16H160V184h48a24 24 0 0 0 24-24V48A24 24 0 0 0 208 24Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8H208a8 8 0 0 1 8 8Z"/></svg>
+      </span>
+      <h3>Sistem Digital</h3>
+      <p>Pembuatan aplikasi web berbasis cloud, sistem pelaporan digital, panel admin, dan integrasi AI untuk instansi dan bisnis.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">
+        <!-- Robot / AI -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M200 116h-8V104a16 16 0 0 0-16-16H136V72h8a16 16 0 0 0 16-16V40a16 16 0 0 0-16-16h-32a16 16 0 0 0-16 16V56a16 16 0 0 0 16 16h8V88H80a16 16 0 0 0-16 16v12H56a16 16 0 0 0-16 16v48a16 16 0 0 0 16 16h8v8a16 16 0 0 0 16 16h96a16 16 0 0 0 16-16v-8h8a16 16 0 0 0 16-16v-48a16 16 0 0 0-16-16ZM112 40h32v16h-32Zm-16 64h64v72H80Zm120 60h-8v-44h8Zm-168 0H40v-44h8ZM176 216H80v-8h96Z"/></svg>
+      </span>
+      <h3>Integrasi AI</h3>
+      <p>Implementasi AI sebagai otak sistem customer service, chatbot, dan otomasi laporan digital untuk efisiensi kerja.</p>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-icon">
+        <!-- Map / pemetaan -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M228.92 49.69a8 8 0 0 0-6.86-1.45L160.93 63.52 99.58 32.84a8 8 0 0 0-6.37-.4L30.43 54.28A8 8 0 0 0 24 61.69V200a8 8 0 0 0 11.08 7.31l61.38-24.06 61.35 30.68a7.9 7.9 0 0 0 3.54.83 8.21 8.21 0 0 0 2.83-.52l62.77-21.88A8 8 0 0 0 232 184.31V56a8 8 0 0 0-3.08-6.31ZM104 49.48l48 24v133L104 182.52Zm-64 20.47 48-18.53v131.14l-48 18.82Zm176 164.57-48 16.74V119.83l48-12Z"/></svg>
+      </span>
+      <h3>Desain & Pemetaan</h3>
+      <p>Pembuatan denah instalasi listrik, peta jaringan, dan dokumentasi teknis sistem yang terstruktur dan rapi.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTOFOLIO -->
+<div class="divider"></div>
+<section id="portofolio">
+  <div class="reveal">
+    <p class="section-label">● Hasil nyata yang sudah berjalan</p>
+    <h2 class="section-title">Portofolio</h2>
+    <p class="section-desc">Proyek yang sudah live dan digunakan oleh instansi pemerintah maupun klien nyata.</p>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-card reveal">
+      <div class="portfolio-num">01</div>
+      <div class="portfolio-info">
+        <h3>LaporPak — Sistem Pelaporan Digital</h3>
+        <p>Sistem pelaporan digital berbasis PWA untuk Pengadilan Agama Bengkayang. Mencakup laporan petugas, panel admin, laporan serah terima, dan rekap bulanan otomatis. Diakses langsung dari HP tanpa install aplikasi.</p>
+        <div class="tags">
+          <span class="tag">PWA</span>
+          <span class="tag">Apps Script</span>
+          <span class="tag">Google Cloud</span>
+          <span class="tag">Live & Aktif</span>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card reveal">
+      <div class="portfolio-num">02</div>
+      <div class="portfolio-info">
+        <h3>Sistem Customer Service + AI</h3>
+        <p>Sistem layanan customer service terintegrasi dengan AI sebagai otak pemrosesan. Mampu menjawab pertanyaan otomatis, mengarahkan pengguna, dan merekap interaksi secara efisien.</p>
+        <div class="tags">
+          <span class="tag">AI Integration</span>
+          <span class="tag">Automation</span>
+          <span class="tag">Web App</span>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-card reveal">
+      <div class="portfolio-num">03</div>
+      <div class="portfolio-info">
+        <h3>Instalasi CCTV & Jaringan</h3>
+        <p>Berbagai proyek instalasi kamera CCTV, konfigurasi NVR dengan akses remote, dan setup jaringan LAN untuk klien rumahan dan perkantoran di wilayah Bengkayang dan sekitarnya.</p>
+        <div class="tags">
+          <span class="tag">CCTV</span>
+          <span class="tag">NVR Config</span>
+          <span class="tag">LAN Setup</span>
+          <span class="tag">Remote Access</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KEAHLIAN -->
+<div class="divider"></div>
+<section id="keahlian">
+  <div class="reveal">
+    <p class="section-label">● Tools & teknologi</p>
+    <h2 class="section-title">Keahlian</h2>
+    <p class="section-desc">Kombinasi skill teknis lapangan dan digital yang saling melengkapi.</p>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M213.85 125.46L99.85 213.46A8 8 0 0 1 88 206V142H40a8 8 0 0 1-6.15-13.14l114-88a8 8 0 0 1 12.29 9.25L140.89 126H208a8 8 0 0 1 4.96 14.14Z"/></svg></span>
+      <span>Instalasi Listrik</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm87.63 96H168.5a131.67 131.67 0 0 0-23.38-71.48A88.22 88.22 0 0 1 215.63 120ZM96 128a116.58 116.58 0 0 0 4.34 32H155.66A116.58 116.58 0 0 0 160 128a116.58 116.58 0 0 0-4.34-32H100.34A116.58 116.58 0 0 0 96 128Zm32-95.54c12.34 10.33 22.64 33.84 27.36 63.54h-54.72C105.36 66.3 115.66 42.79 128 32.46ZM110.88 48.52A131.67 131.67 0 0 0 87.5 120H40.37a88.22 88.22 0 0 1 70.51-71.48ZM40.37 136H87.5a131.67 131.67 0 0 0 23.38 71.48A88.22 88.22 0 0 1 40.37 136ZM128 223.54c-12.34-10.33-22.64-33.84-27.36-63.54h54.72c-4.72 29.7-15.02 53.21-27.36 63.54Zm17.12-15.06A131.67 131.67 0 0 0 168.5 136h47.13a88.22 88.22 0 0 1-70.51 71.48Z"/></svg></span>
+      <span>Mikrotik</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M208 56H180.28L166.65 35.56A8 8 0 0 0 160 32H96a8 8 0 0 0-6.65 3.56L75.72 56H48A24 24 0 0 0 24 80V192a24 24 0 0 0 24 24H208a24 24 0 0 0 24-24V80A24 24 0 0 0 208 56Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V80a8 8 0 0 1 8-8H80a8 8 0 0 0 6.65-3.56L100.28 48h55.44l13.63 20.44A8 8 0 0 0 176 72h32a8 8 0 0 1 8 8ZM128 88a44 44 0 1 0 44 44A44.05 44.05 0 0 0 128 88Zm0 72a28 28 0 1 1 28-28A28 28 0 0 1 128 160Z"/></svg></span>
+      <span>CCTV / NVR</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24Zm64 168H64a8 8 0 0 0 0 16h128a8 8 0 0 0 0-16ZM40 128a88 88 0 1 1 88 88A88.1 88.1 0 0 1 40 128Zm72-20v52a8 8 0 0 0 16 0V108a8 8 0 0 0-16 0Zm0-36a12 12 0 1 1 12 12A12 12 0 0 1 112 72Z"/></svg></span>
+      <span>PWA</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M224 48H32a8 8 0 0 0-8 8V192a16 16 0 0 0 16 16H216a16 16 0 0 0 16-16V56a8 8 0 0 0-8-8ZM136 176H88a8 8 0 0 1 0-16h48a8 8 0 0 1 0 16Zm32-48H88a8 8 0 0 1 0-16h80a8 8 0 0 1 0 16Z"/></svg></span>
+      <span>Apps Script</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M200 116h-8V104a16 16 0 0 0-16-16H136V72h8a16 16 0 0 0 16-16V40a16 16 0 0 0-16-16h-32a16 16 0 0 0-16 16V56a16 16 0 0 0 16 16h8V88H80a16 16 0 0 0-16 16v12H56a16 16 0 0 0-16 16v48a16 16 0 0 0 16 16h8v8a16 16 0 0 0 16 16h96a16 16 0 0 0 16-16v-8h8a16 16 0 0 0 16-16v-48a16 16 0 0 0-16-16ZM112 40h32v16h-32Zm-16 64h64v72H80Zm120 60h-8v-44h8Zm-168 0H40v-44h8ZM176 216H80v-8h96Z"/></svg></span>
+      <span>AI Integration</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M208 24H48A24 24 0 0 0 24 48V160a24 24 0 0 0 24 24H96v16H80a8 8 0 0 0 0 16h96a8 8 0 0 0 0-16H160V184h48a24 24 0 0 0 24-24V48A24 24 0 0 0 208 24Zm8 136a8 8 0 0 1-8 8H48a8 8 0 0 1-8-8V48a8 8 0 0 1 8-8H208a8 8 0 0 1 8 8Z"/></svg></span>
+      <span>Web App</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M232 112a8 8 0 0 1-8 8h-24v8a88 88 0 0 1-176 0v-8H0a8 8 0 0 1 0-16h24V96a88 88 0 0 1 176 0v8h24a8 8 0 0 1 8 8ZM40 128a72 72 0 0 0 144 0V96a72 72 0 0 0-144 0Z"/></svg></span>
+      <span>GitHub Pages</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M228.92 49.69a8 8 0 0 0-6.86-1.45L160.93 63.52 99.58 32.84a8 8 0 0 0-6.37-.4L30.43 54.28A8 8 0 0 0 24 61.69V200a8 8 0 0 0 11.08 7.31l61.38-24.06 61.35 30.68a7.9 7.9 0 0 0 3.54.83 8.21 8.21 0 0 0 2.83-.52l62.77-21.88A8 8 0 0 0 232 184.31V56a8 8 0 0 0-3.08-6.31ZM104 49.48l48 24v133L104 182.52Zm-64 20.47 48-18.53v131.14l-48 18.82Zm176 164.57-48 16.74V119.83l48-12Z"/></svg></span>
+      <span>Desain Denah</span>
+    </div>
+    <div class="skill-item reveal">
+      <span class="skill-emoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><path fill="currentColor" d="M237.66 18.34a8 8 0 0 0-11.32 0L178.83 65.85C165.08 55.31 147.89 48 128 48A104 104 0 1 0 232 152c0-19.89-7.31-37.08-17.85-50.83l47.51-47.51a8 8 0 0 0 0-11.32ZM128 240A88 88 0 1 1 216 152a87.09 87.09 0 0 1-25.84 62.16A88 88 0 0 1 128 240Z"/></svg></span>
+      <span>Troubleshoot</span>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAK -->
+<div class="divider"></div>
+<section id="kontak">
+  <div class="contact-box reveal">
+    <h3>Siap Bekerja Sama?</h3>
+    <p>Butuh instalasi, sistem digital, atau konsultasi teknis?<br>Hubungi kami langsung — respon cepat, harga transparan.</p>
+    <div class="contact-links">
+      <a href="https://wa.me/6285156775654" class="contact-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 256 256" style="flex-shrink:0"><path fill="currentColor" d="M187.58 144.84l-32-16a8 8 0 0 0-8 .4l-16 9.6a56.27 56.27 0 0 1-23.94-23.94l9.6-16a8 8 0 0 0 .4-8l-16-32A8 8 0 0 0 96 56a40 40 0 0 0-40 40 128.14 128.14 0 0 0 128 128 40 40 0 0 0 40-40 8 8 0 0 0-4.42-7.16ZM184 208A112.12 112.12 0 0 1 72 96a24 24 0 0 1 19.29-23.54l12.47 24.94-9.4 15.67a8 8 0 0 0-.42 7.25 72.35 72.35 0 0 0 37.74 37.74 8 8 0 0 0 7.25-.42l15.67-9.4 24.94 12.47A24 24 0 0 1 184 208Zm24-184h-48a8 8 0 0 0 0 16h28.69L132.69 96H48a8 8 0 0 0 0 16h88a8 8 0 0 0 5.66-2.34l68-68V70a8 8 0 0 0 16 0V32a8 8 0 0 0-8-8Z"/></svg>
+        WhatsApp
+      </a>
+      <a href="mailto:borneotech177@gmail.com" class="contact-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 256 256" style="flex-shrink:0"><path fill="currentColor" d="M224 48H32a8 8 0 0 0-8 8V192a16 16 0 0 0 16 16H216a16 16 0 0 0 16-16V56a8 8 0 0 0-8-8Zm-96 85.15L52.57 64H203.43ZM98.71 128 40 181.81V74.19Zm11.84 10.85 12 11.05a8 8 0 0 0 10.82 0l12-11.05 58.2 53.15H52.57Zm52.74-10.85L216 74.19V181.81Z"/></svg>
+        Email
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  © 2025 <span>Borneo-Tech</span> · Bengkayang, Kalimantan Barat · Est. 2018
+</footer>
+
+<script>
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
